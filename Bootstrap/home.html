@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+        <style>
+            .box{
+                background-color: plum;
+                color: purple;
+                border: 1px solid purple;
+                border-radius: 4px;
+                margin: 10px 0;
+            }
+        </style>
+</head>
+<body>
+    <h1>Home Page</h1>
+
+    <hr>
+    <h5 class="text-center" id="screenSize"></h5>
+    <hr>
+<!-- More than 12 columns in each row -->
+    <!-- <div class="container">
+        <div class="row">
+            <div class="col">hello</div>
+            <div class="col">hello</div>
+            <div class="col">hello</div>
+            <div class="col">hello</div>
+            <div class="col">hello</div>
+            <div class="col">hello</div>
+            <div class="col">hello</div>
+            <div class="col">hello</div>
+            <div class="col">hello</div>
+            <div class="col">hello</div>
+            <div class="col">hello</div>
+            <div class="col">hello</div>
+            <div class="col">hello</div>
+            <div class="col">hello</div>
+            <div class="col">hello</div>
+            <div class="col">hello</div>
+            <div class="col">hello</div>
+            <div class="col">hello</div>
+            <div class="col">hello</div>
+            <div class="col">hello</div>
+            <div class="col">hello</div>
+            <div class="col">hello</div>
+            <div class="col">hello</div>
+            <div class="col">hello</div>
+            <div class="col">hello</div>
+            <div class="col">hello</div>
+            <div class="col">hello</div>
+            <div class="col">hello</div>
+            <div class="col">hello</div>
+            <div class="col">hello</div>
+            <div class="col">hello</div>
+            <div class="col">hello</div>
+            <div class="col">hello</div>
+            <div class="col">hello</div>
+            <div class="col">hello</div>
+        </div>
+    </div> -->
+
+
+
+    <!-- <div class="container">
+        <div class="row">
+            <div class="col-1">Colum - 1</div>
+            <div class="col-2">Colum - 2</div>
+            <div class="col-3">Colum - 3</div>
+            <div class="col-4">Colum - 4</div>
+            <div class="col-5">Colum - 5</div>
+            <div class="col-6">Colum - 6</div>
+            <div class="col-7">Colum - 7</div>
+            <div class="col-8">Colum - 8</div>
+            <div class="col-9">Colum - 9</div>
+            <div class="col-10">Colum - 10</div>
+            <div class="col-11">Colum - 11</div>
+            <div class="col-12">Colum - 12</div>
+        </div>
+    </div> -->
+
+    <!-- <h4 class="text-center">Container Class</h4>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio ratione, voluptatum nisi maiores corporis quis nesciunt illum ut adipisci aspernatur alias repellat tenetur asperiores tempore assumenda dignissimos dicta iusto deserunt.
+            </div>
+            
+        </div>
+    </div>
+    <h4 class="text-center">Container Fluid Class</h4>
+
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio ratione, voluptatum nisi maiores corporis quis nesciunt illum ut adipisci aspernatur alias repellat tenetur asperiores tempore assumenda dignissimos dicta iusto deserunt.
+            </div>
+            
+        </div>
+    </div>
+    <h4 class="text-center">Container XXL Class</h4>
+    <div class="container-xxl">
+        <div class="row">
+            <div class="col">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio ratione, voluptatum nisi maiores corporis quis nesciunt illum ut adipisci aspernatur alias repellat tenetur asperiores tempore assumenda dignissimos dicta iusto deserunt.
+            </div>
+           
+        </div>
+    </div>
+        <h4 class="text-center">Container XL Class</h4>
+    <div class="container-xl">
+        <div class="row">
+            <div class="col">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio ratione, voluptatum nisi maiores corporis quis nesciunt illum ut adipisci aspernatur alias repellat tenetur asperiores tempore assumenda dignissimos dicta iusto deserunt.
+            </div>
+           
+        </div>
+    </div>
+        <h4 class="text-center">Container lg Class</h4>
+    <div class="container-lg">
+        <div class="row">
+            <div class="col">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio ratione, voluptatum nisi maiores corporis quis nesciunt illum ut adipisci aspernatur alias repellat tenetur asperiores tempore assumenda dignissimos dicta iusto deserunt.
+            </div>
+           
+        </div>
+    </div>
+        <h4 class="text-center">Container md Class</h4>
+    <div class="container-md">
+        <div class="row">
+            <div class="col">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio ratione, voluptatum nisi maiores corporis quis nesciunt illum ut adipisci aspernatur alias repellat tenetur asperiores tempore assumenda dignissimos dicta iusto deserunt.
+            </div>
+           
+        </div>
+    </div>
+        <h4 class="text-center">Container sm Class</h4>
+    <div class="container-sm">
+        <div class="row">
+            <div class="col">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio ratione, voluptatum nisi maiores corporis quis nesciunt illum ut adipisci aspernatur alias repellat tenetur asperiores tempore assumenda dignissimos dicta iusto deserunt.
+            </div>
+           
+        </div>
+    </div> -->
+
+
+
+<!-- 
+    <div class="container">
+        <div class="row">
+            <div class="col-xxl-4 box">col-xxl-4</div>
+        </div>
+        <div class="row">
+            <div class="col-xl-4 box">col-xl-4</div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 col-md-8 box">col-lg-4 col-md-8</div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 box">col-md-4</div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4 box">col-sm-4</div>
+        </div>
+    </div> -->
+
+
+    <!-- <h1 class="p-4">jfdskjkds</h1> -->
+    <!-- <h1 class="px-4">jfdskjkds</h1> -->
+    <!-- <h1 class="py-4">jfdskjkds</h1> -->
+    <!-- <h1 class="pt-4">jfdskjkds</h1> -->
+    <!-- <h1 class="pb-4">jfdskjkds</h1> -->
+    <!-- <h1 class="m-5">jfdskjkds</h1>
+    <h1 class="mx-5">jfdskjkds</h1>
+    <h1 class="my-5">jfdskjkds</h1>
+    <h1 class="mt-5">jfdskjkds</h1>
+    <h1 class="mb-5">jfdskjkds</h1> -->
+
+
+
+
+
+
+
+
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+
+
+        <script>
+            window.addEventListener('resize',()=>{
+                const viewportWidth = window.innerWidth;
+                screenSize.innerHTML = `Screen Size : ${viewportWidth}`;
+
+            })
+
+
+
+
+        </script>
+</body>
+</html>

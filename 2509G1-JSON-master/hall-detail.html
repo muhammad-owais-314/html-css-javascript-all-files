@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hall Detail | WeDream</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,500&family=Jost:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<!-- EmailJS for booking reminders -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--rose:#b93b56;--gold:#c89b2c;--gold-light:#e8b93c;--gold-dark:#8a691a;--dark:#070707;--dark2:#0e0b0c;--glass:rgba(18,14,16,.88);--ok:#7fd28a;--bad:#e87878}
+body{background:var(--dark);font-family:'Jost',sans-serif;color:#f0ede8;overflow-x:hidden}
+
+#loadingScreen{position:fixed;inset:0;background:var(--dark);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;transition:opacity .4s,visibility .4s}
+#loadingScreen.hidden{opacity:0;visibility:hidden}
+.loader-ring{width:52px;height:52px;border:3px solid rgba(200,155,44,.15);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loader-text{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:rgba(255,255,255,.45);letter-spacing:.08em}
+
+.topbar{display:flex;align-items:center;gap:12px;padding:18px 24px;background:rgba(11,7,8,.85);border-bottom:1px solid rgba(200,155,44,.15);backdrop-filter:blur(10px);position:sticky;top:0;z-index:50}
+.back-btn{background:transparent;border:1px solid rgba(200,155,44,.4);color:#fff;padding:8px 14px;border-radius:10px;cursor:pointer;font-size:.8rem;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+.back-btn:hover{background:var(--gold);color:#0b0708}
+.brand{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--gold);margin-left:auto}
+
+/* Hero gallery */
+.hero{display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:240px 240px;gap:8px;padding:18px 24px;max-width:1300px;margin:0 auto}
+.hero img{width:100%;height:100%;object-fit:cover;border-radius:12px;cursor:pointer;transition:transform .4s}
+.hero img:hover{transform:scale(1.02)}
+.hero img:first-child{grid-row:1/3}
+
+@media(max-width:700px){.hero{grid-template-columns:1fr;grid-template-rows:none}.hero img{height:220px}.hero img:first-child{grid-row:auto}}
+
+.container-x{max-width:1300px;margin:0 auto;padding:20px 24px 60px;display:grid;grid-template-columns:1fr 380px;gap:30px}
+@media(max-width:980px){.container-x{grid-template-columns:1fr}}
+
+.title-row{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-bottom:8px}
+.title-row h1{font-family:'Cormorant Garamond',serif;font-size:2.4rem;color:#fff;font-weight:700}
+.verified{background:linear-gradient(135deg,var(--gold-dark),var(--gold));color:#0b0708;padding:4px 10px;border-radius:20px;font-size:.7rem;font-weight:700;letter-spacing:1px}
+.meta-line{color:rgba(255,255,255,.6);font-size:.9rem;margin-bottom:18px}
+.meta-line i{color:var(--gold);margin-right:5px}
+
+.tabs{display:flex;gap:6px;border-bottom:1px solid rgba(200,155,44,.15);margin-bottom:22px;overflow-x:auto}
+.tab{background:none;border:none;color:rgba(255,255,255,.55);padding:12px 18px;font-weight:600;font-size:.8rem;letter-spacing:1.2px;text-transform:uppercase;cursor:pointer;position:relative;white-space:nowrap;font-family:'Jost',sans-serif}
+.tab.active{color:var(--gold)}
+.tab.active::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--gold)}
+
+.panel{display:none}.panel.active{display:block;animation:fadeIn .3s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+.feature-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+.feat{background:var(--glass);border:1px solid rgba(200,155,44,.15);padding:14px;border-radius:12px;display:flex;align-items:center;gap:10px;font-size:.85rem}
+.feat i{color:var(--gold);font-size:1.05rem}
+
+.pkg-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.pkg{background:var(--glass);border:1px solid rgba(200,155,44,.2);padding:20px;border-radius:14px;text-align:center;transition:all .3s;cursor:pointer}
+.pkg:hover{border-color:var(--gold);transform:translateY(-3px)}
+.pkg h4{font-family:'Cormorant Garamond',serif;color:var(--gold);font-size:1.5rem;margin-bottom:8px}
+.pkg .p{color:#fff;font-size:1.3rem;font-weight:700}
+
+/* Sidebar booking card */
+.side{position:sticky;top:90px;align-self:start;background:var(--glass);border:1px solid rgba(200,155,44,.25);border-radius:18px;padding:22px;box-shadow:0 30px 60px -25px rgba(0,0,0,.9)}
+.side .pr{color:#fff;font-size:1.5rem;font-weight:700;margin-bottom:4px}
+.side .pr small{color:rgba(255,255,255,.5);font-size:.75rem;font-weight:400}
+.side .rating-big{color:#ffd05a;font-size:.9rem;margin-bottom:18px}
+.btn-primary-x{width:100%;padding:13px;background:linear-gradient(135deg,var(--rose),#8e2c42);color:#fff;border:none;border-radius:12px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;font-size:.8rem;cursor:pointer;margin-bottom:10px;transition:all .3s}
+.btn-primary-x:hover{background:linear-gradient(135deg,var(--gold-dark),var(--gold));color:#0b0708}
+.btn-out{width:100%;padding:11px;background:transparent;color:var(--gold);border:1px solid var(--gold);border-radius:12px;font-weight:600;font-size:.78rem;letter-spacing:1.2px;text-transform:uppercase;cursor:pointer;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
+.btn-out:hover{background:var(--gold);color:#0b0708}
+
+/* Calendar */
+.cal-wrap{background:var(--glass);border:1px solid rgba(200,155,44,.15);border-radius:14px;padding:18px;margin-top:14px}
+.cal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.cal-head button{background:transparent;border:1px solid rgba(200,155,44,.3);color:var(--gold);width:30px;height:30px;border-radius:8px;cursor:pointer}
+.cal-head h4{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:#fff}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;font-size:.78rem;text-align:center}
+.cal-grid .dow{color:var(--gold);font-weight:600;padding:6px 0;font-size:.65rem;letter-spacing:1px;text-transform:uppercase}
+.cal-grid .day{padding:8px 0;border-radius:6px;cursor:pointer;color:rgba(255,255,255,.8);position:relative;transition:all .2s;border:1px solid transparent}
+.cal-grid .day:hover{background:rgba(200,155,44,.15)}
+.cal-grid .day.empty{cursor:default;color:rgba(255,255,255,.15)}
+.cal-grid .day.past{cursor:not-allowed;color:rgba(255,255,255,.2);text-decoration:line-through}
+.cal-grid .day.today{border-color:var(--gold)}
+.cal-grid .day.booked{background:rgba(232,120,120,.25);color:#ff9c9c;cursor:not-allowed}
+.cal-grid .day.booked::after{content:"●";position:absolute;bottom:1px;right:3px;font-size:.5rem;color:var(--bad)}
+.cal-grid .day.selected{background:linear-gradient(135deg,var(--gold-dark),var(--gold));color:#0b0708;font-weight:700}
+.cal-legend{display:flex;gap:14px;margin-top:10px;font-size:.7rem;color:rgba(255,255,255,.55);flex-wrap:wrap}
+.cal-legend span{display:inline-flex;align-items:center;gap:5px}
+.cal-legend .sw{width:10px;height:10px;border-radius:3px;display:inline-block}
+.booked-msg{margin-top:10px;color:var(--bad);font-size:.8rem;display:none}
+.booked-msg.show{display:block}
+
+/* Rating section */
+.rating-input{display:flex;gap:6px;margin-bottom:10px}
+.star-btn{background:none;border:none;color:#444;font-size:1.6rem;cursor:pointer;transition:color .2s}
+.star-btn.on,.star-btn:hover,.star-btn:hover~.star-btn{color:#ffd05a}
+.review-form textarea{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(200,155,44,.25);color:#fff;padding:12px;border-radius:10px;font-family:inherit;resize:vertical;min-height:80px;margin-bottom:10px}
+.review-form input{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(200,155,44,.25);color:#fff;padding:10px 12px;border-radius:10px;margin-bottom:10px;font-family:inherit}
+.review-list{margin-top:18px;display:flex;flex-direction:column;gap:12px}
+.review-item{background:var(--glass);border:1px solid rgba(200,155,44,.12);padding:14px;border-radius:12px}
+.review-item .top{display:flex;justify-content:space-between;margin-bottom:6px}
+.review-item .name{font-weight:600;color:#fff}
+.review-item .stars{color:#ffd05a;font-size:.85rem}
+.review-item .cmt{font-size:.85rem;color:rgba(255,255,255,.75)}
+.review-item .when{font-size:.7rem;color:rgba(255,255,255,.4)}
+.live-avg{display:flex;align-items:center;gap:14px;padding:14px;background:linear-gradient(135deg,rgba(200,155,44,.1),transparent);border-radius:12px;margin-bottom:18px;border:1px solid rgba(200,155,44,.2)}
+.live-avg .big{font-size:2.4rem;font-family:'Cormorant Garamond',serif;color:var(--gold);font-weight:700}
+.live-avg .lbl{font-size:.7rem;letter-spacing:1.4px;text-transform:uppercase;color:rgba(255,255,255,.6)}
+
+h2.sec-title{font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+h2.sec-title i{color:var(--gold)}
+
+/* Payment modal — Stripe-like */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:200;display:none;align-items:flex-start;justify-content:center;padding:40px 16px;overflow-y:auto}
+.modal-bg.show{display:flex}
+.modal-card{background:#fff;color:#1a1a1a;border-radius:18px;max-width:480px;width:100%;padding:28px;position:relative;font-family:'Jost',sans-serif;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.modal-card h3{font-size:1.3rem;margin-bottom:6px;color:#1a1a1a}
+.modal-card .sub{color:#666;font-size:.85rem;margin-bottom:18px}
+.modal-close{position:absolute;top:14px;right:16px;background:none;border:none;font-size:1.4rem;color:#888;cursor:pointer}
+.pay-methods{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:18px}
+.pm{border:1.5px solid #e5e5e5;border-radius:10px;padding:12px 8px;text-align:center;font-size:.7rem;cursor:pointer;font-weight:600;color:#555;transition:all .2s}
+.pm i,.pm img{font-size:1.4rem;display:block;margin:0 auto 4px;color:#555;height:22px}
+.pm.selected{border-color:#635bff;color:#635bff;background:#f5f4ff}
+.pm.selected i{color:#635bff}
+.pay-form label{display:block;font-size:.75rem;color:#555;margin-bottom:5px;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
+.pay-form input{width:100%;border:1.5px solid #e5e5e5;border-radius:8px;padding:11px 12px;font-size:.9rem;margin-bottom:14px;outline:none;font-family:inherit;transition:border-color .2s}
+.pay-form input:focus{border-color:#635bff}
+.card-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pay-amount{background:#f5f4ff;border-radius:10px;padding:14px;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center}
+.pay-amount .l{color:#666;font-size:.78rem}
+.pay-amount .a{font-size:1.4rem;font-weight:700;color:#1a1a1a}
+.pay-btn{width:100%;background:linear-gradient(135deg,#635bff,#4f46e5);color:#fff;border:none;padding:14px;border-radius:10px;font-size:.95rem;font-weight:600;cursor:pointer;transition:transform .15s}
+.pay-btn:hover{transform:translateY(-1px)}
+.pay-secure{text-align:center;font-size:.7rem;color:#999;margin-top:10px}
+.pay-secure i{color:#22c55e}
+
+.toast{position:fixed;bottom:30px;right:30px;background:#1a1a1a;color:#fff;padding:14px 20px;border-radius:12px;border-left:4px solid var(--gold);z-index:300;opacity:0;transform:translateY(20px);transition:all .3s;box-shadow:0 20px 40px rgba(0,0,0,.4);max-width:340px;font-size:.85rem}
+.toast.show{opacity:1;transform:translateY(0)}
+.toast.success{border-left-color:var(--ok)}
+.toast.error{border-left-color:var(--bad)}
+
+/* Navbar & Footer shared */
+.main-nav{position:sticky;top:0;z-index:90;display:flex;align-items:center;justify-content:space-between;padding:16px 24px;background:rgba(10,7,8,.92);border-bottom:1px solid rgba(200,155,44,.18);backdrop-filter:blur(12px)}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--gold);text-decoration:none;display:inline-flex;align-items:center;gap:10px;font-weight:700}
+.nav-logo i{font-size:1.1rem}
+.nav-back{color:rgba(255,255,255,.7);text-decoration:none;font-size:.82rem;font-weight:500;display:inline-flex;align-items:center;gap:8px;transition:color .25s}
+.nav-back:hover{color:var(--gold)}
+.nav-links{display:flex;gap:26px}
+.nav-links a{color:rgba(255,255,255,.7);text-decoration:none;font-size:.82rem;font-weight:500;letter-spacing:.8px;text-transform:uppercase;transition:color .25s}
+.nav-links a:hover{color:var(--gold)}
+.nav-cta{background:linear-gradient(135deg,var(--rose),#8e2c42);color:#fff;text-decoration:none;padding:10px 20px;border-radius:10px;font-size:.78rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;transition:all .3s}
+.nav-cta:hover{background:linear-gradient(135deg,var(--gold-dark),var(--gold));color:#0b0708}
+.nav-toggle{display:none;background:none;border:none;color:#fff;font-size:1.2rem;cursor:pointer}
+
+.main-footer{background:#070505;border-top:1px solid rgba(200,155,44,.15);padding:50px 24px 30px}
+.footer-inner{max-width:1200px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:24px}
+.footer-brand{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--gold);display:inline-flex;align-items:center;gap:8px}
+.footer-links{display:flex;flex-wrap:wrap;gap:18px}
+.footer-links a{color:rgba(255,255,255,.55);text-decoration:none;font-size:.8rem;letter-spacing:.6px;text-transform:uppercase;transition:color .25s}
+.footer-links a:hover{color:var(--gold)}
+.footer-social{display:flex;gap:12px}
+.footer-social a{width:36px;height:36px;border-radius:50%;border:1px solid rgba(200,155,44,.3);display:inline-flex;align-items:center;justify-content:center;color:var(--gold);text-decoration:none;transition:all .25s}
+.footer-social a:hover{background:var(--gold);color:#0b0708;border-color:var(--gold)}
+.footer-copy{text-align:center;color:rgba(255,255,255,.35);font-size:.75rem;margin-top:28px;letter-spacing:.6px}
+
+@media(max-width:768px){
+  .nav-links{display:none}
+  .nav-toggle{display:block}
+  .footer-inner{flex-direction:column;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<div id="loadingScreen"><div class="loader-ring"></div><div class="loader-text">Loading hall details…</div></div>
+
+<nav class="main-nav">
+  <a href="halls.html" class="nav-back"><i class="fa-solid fa-arrow-left"></i> All Halls</a>
+  <a href="halls.html" class="nav-logo"><i class="fa-solid fa-crown"></i> WeDream</a>
+  <div class="nav-links">
+    <a href="halls.html">Halls</a>
+    <a href="catering.html">Catering</a>
+    <a href="photographers.html">Photographers</a>
+    <a href="car-rentals.html">Car Rentals</a>
+    <a href="decorators.html">Decorators</a>
+  </div>
+  <a href="halls.html" class="nav-cta">Book Now</a>
+  <button class="nav-toggle" aria-label="Menu"><i class="fa-solid fa-bars"></i></button>
+</nav>
+
+<div class="hero" id="hero"></div>
+
+<div class="container-x">
+  <div>
+    <div class="title-row">
+      <h1 id="hName"></h1>
+      <span class="verified"><i class="fa-solid fa-circle-check"></i> Verified</span>
+    </div>
+    <div class="meta-line"><i class="fa-solid fa-location-dot"></i><span id="hAddr"></span> · <i class="fa-solid fa-star" style="color:#ffd05a"></i><span id="hRate"></span> · <i class="fa-solid fa-users"></i> <span id="hCap"></span> guests</div>
+
+    <div class="tabs">
+      <button class="tab active" data-t="overview">Overview</button>
+      <button class="tab" data-t="packages">Packages</button>
+      <button class="tab" data-t="reviews">Live Reviews</button>
+      <button class="tab" data-t="booking">Booking</button>
+    </div>
+
+    <div class="panel active" id="p-overview">
+      <h2 class="sec-title"><i class="fa-solid fa-sparkles"></i>Features & Amenities</h2>
+      <div class="feature-grid" id="featGrid"></div>
+    </div>
+
+    <div class="panel" id="p-packages">
+      <h2 class="sec-title"><i class="fa-solid fa-box-open"></i>Packages</h2>
+      <div class="pkg-grid" id="pkgGrid"></div>
+    </div>
+
+    <div class="panel" id="p-reviews">
+      <h2 class="sec-title"><i class="fa-solid fa-comments"></i>Live Reviews</h2>
+      <div class="live-avg">
+        <div><div class="big" id="avgRate">-</div><div class="lbl">Live Rating</div></div>
+        <div style="flex:1"><div id="avgStars" style="color:#ffd05a;font-size:1.1rem"></div><div style="color:rgba(255,255,255,.55);font-size:.8rem;margin-top:3px"><span id="revCount">0</span> reviews</div></div>
+      </div>
+
+      <div class="review-form" style="background:var(--glass);padding:18px;border-radius:14px;border:1px solid rgba(200,155,44,.15)">
+        <h4 style="color:#fff;margin-bottom:12px;font-family:'Cormorant Garamond',serif;font-size:1.2rem">Add Your Review</h4>
+        <div class="rating-input" id="ratingInput">
+          <button type="button" class="star-btn" data-v="1"><i class="fa-solid fa-star"></i></button>
+          <button type="button" class="star-btn" data-v="2"><i class="fa-solid fa-star"></i></button>
+          <button type="button" class="star-btn" data-v="3"><i class="fa-solid fa-star"></i></button>
+          <button type="button" class="star-btn" data-v="4"><i class="fa-solid fa-star"></i></button>
+          <button type="button" class="star-btn" data-v="5"><i class="fa-solid fa-star"></i></button>
+        </div>
+        <input id="revName" placeholder="Your name">
+        <textarea id="revText" placeholder="Share your experience…"></textarea>
+        <button class="btn-primary-x" id="submitRev" style="margin:0">Submit Review</button>
+      </div>
+
+      <div class="review-list" id="revList"></div>
+    </div>
+
+    <div class="panel" id="p-booking">
+      <h2 class="sec-title"><i class="fa-solid fa-calendar-check"></i>Check Availability</h2>
+      <p style="color:rgba(255,255,255,.6);margin-bottom:14px;font-size:.9rem">Red dates already booked. Click any open future date to select.</p>
+      <div class="cal-wrap">
+        <div class="cal-head">
+          <button id="prevM"><i class="fa-solid fa-chevron-left"></i></button>
+          <h4 id="calTitle"></h4>
+          <button id="nextM"><i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+        <div class="cal-grid" id="calGrid"></div>
+        <div class="cal-legend">
+          <span><span class="sw" style="background:rgba(232,120,120,.4)"></span>Booked</span>
+          <span><span class="sw" style="background:linear-gradient(135deg,var(--gold-dark),var(--gold))"></span>Selected</span>
+          <span><span class="sw" style="background:transparent;border:1px solid var(--gold)"></span>Today</span>
+        </div>
+        <div class="booked-msg" id="bookedMsg"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sticky sidebar -->
+  <aside class="side">
+    <div class="pr" id="sPrice"></div>
+    <div style="color:rgba(255,255,255,.5);font-size:.75rem">Starting price</div>
+    <div class="rating-big" id="sRate"></div>
+
+    <div style="background:rgba(200,155,44,.08);border:1px solid rgba(200,155,44,.2);padding:12px;border-radius:10px;margin-bottom:14px">
+      <div style="font-size:.7rem;letter-spacing:1.2px;text-transform:uppercase;color:var(--gold);margin-bottom:4px">Selected Date</div>
+      <div id="selDate" style="color:#fff;font-weight:600">No date selected</div>
+      <div id="selDay" style="color:rgba(255,255,255,.55);font-size:.78rem"></div>
+    </div>
+
+    <button class="btn-primary-x" id="bookNow"><i class="fa-solid fa-credit-card"></i> Confirm & Pay</button>
+    <a class="btn-out" id="waBtn" target="_blank"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
+    <a class="btn-out" id="callBtn"><i class="fa-solid fa-phone"></i> Call</a>
+  </aside>
+</div>
+
+<!-- Payment modal -->
+<div class="modal-bg" id="payModal">
+  <div class="modal-card">
+    <button class="modal-close" id="payClose"><i class="fa-solid fa-xmark"></i></button>
+    <h3>Confirm Booking</h3>
+    <div class="sub">Secure payment for your selected date</div>
+
+    <div class="pay-amount">
+      <div><div class="l">Total Amount</div><div style="font-size:.7rem;color:#999;margin-top:2px" id="payDate"></div></div>
+      <div class="a" id="payAmt"></div>
+    </div>
+
+    <div style="font-size:.75rem;font-weight:600;color:#666;letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px">Payment Method</div>
+    <div class="pay-methods">
+      <div class="pm selected" data-pm="card"><i class="fa-solid fa-credit-card"></i>Card</div>
+      <div class="pm" data-pm="jazz"><i class="fa-solid fa-mobile-screen"></i>JazzCash</div>
+      <div class="pm" data-pm="easy"><i class="fa-solid fa-wallet"></i>Easypaisa</div>
+      <div class="pm" data-pm="bank"><i class="fa-solid fa-building-columns"></i>Bank</div>
+    </div>
+
+    <div class="pay-form" id="cardForm">
+      <label>Email (for reminder)</label>
+      <input type="email" id="payEmail" placeholder="you@email.com" required>
+      <label>Card Number</label>
+      <input type="text" id="cardNum" placeholder="1234 1234 1234 1234" maxlength="19">
+      <div class="card-row">
+        <div><label>Expiry</label><input type="text" id="cardExp" placeholder="MM/YY" maxlength="5"></div>
+        <div><label>CVC</label><input type="text" id="cardCvc" placeholder="123" maxlength="4"></div>
+      </div>
+      <label>Cardholder Name</label>
+      <input type="text" id="cardName" placeholder="As on card">
+    </div>
+
+    <button class="pay-btn" id="payConfirm"><i class="fa-solid fa-lock"></i> Pay Now</button>
+    <div class="pay-secure"><i class="fa-solid fa-shield-halved"></i> Secured by 256-bit encryption · Demo only</div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const params=new URLSearchParams(location.search);
+const hallId=parseInt(params.get('id'))||1;
+let hall=null,selectedDate=null,calMonth=new Date(),selStars=0;
+const fallback="https://images.pexels.com/photos/265947/pexels-photo-265947.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop";
+
+// EmailJS — user can set their own public key here
+// emailjs.init({publicKey:"YOUR_PUBLIC_KEY"});
+
+fetch('hallsDetails.json').then(r=>r.json()).then(d=>{
+  hall=d.find(h=>h.id===hallId)||d[0];
+  if(!hall){document.body.innerHTML='Hall not found';return}
+  render();
+  document.getElementById('loadingScreen').classList.add('hidden');
+}).catch(e=>{console.error(e);document.body.innerHTML='<p style="padding:40px;color:#fff">Failed to load hall data.</p>'});
+
+function toast(msg,type='success'){const t=document.getElementById('toast');t.textContent=msg;t.className='toast show '+type;setTimeout(()=>t.classList.remove('show'),3800)}
+
+function render(){
+  document.title=hall.name+' | WeDream';
+  // Hero
+  const imgs=(hall.gallery&&hall.gallery.length?hall.gallery:[hall.image||fallback]).slice(0,5);
+  while(imgs.length<5)imgs.push(imgs[0]);
+  document.getElementById('hero').innerHTML=imgs.map(u=>`<img src="${u}" onerror="this.src='${fallback}'" alt="${hall.name}">`).join('');
+
+  document.getElementById('hName').textContent=hall.name;
+  document.getElementById('hAddr').textContent=hall.address||hall.area;
+  document.getElementById('hRate').textContent=' '+(hall.rating||4.5);
+  document.getElementById('hCap').textContent=hall.capacity||'500+';
+
+  document.getElementById('sPrice').innerHTML='PKR '+(hall.starting_price||0).toLocaleString();
+  document.getElementById('sRate').innerHTML=`<i class="fa-solid fa-star"></i> ${hall.rating} · ${hall.area}`;
+
+  // Features
+  const feats=hall.features||[];
+  const extras=[];
+  if(hall.parking)extras.push({i:'fa-square-parking',t:'Parking ('+(hall.parking_capacity||100)+' cars)'});
+  if(hall.ac)extras.push({i:'fa-snowflake',t:'Air Conditioned'});
+  if(hall.catering)extras.push({i:'fa-utensils',t:'In-house Catering'});
+  if(hall.outdoor)extras.push({i:'fa-tree',t:'Outdoor Space'});
+  if(hall.stage)extras.push({i:'fa-microphone',t:'Stage with Lighting'});
+  document.getElementById('featGrid').innerHTML=
+    extras.map(f=>`<div class="feat"><i class="fa-solid ${f.i}"></i>${f.t}</div>`).join('')+
+    feats.map(f=>`<div class="feat"><i class="fa-solid fa-check"></i>${f}</div>`).join('');
+
+  // Packages
+  document.getElementById('pkgGrid').innerHTML=(hall.packages||[]).map(p=>`
+    <div class="pkg"><h4>${p.name}</h4><div class="p">PKR ${p.price.toLocaleString()}</div></div>`).join('');
+
+  // Contact buttons
+  if(hall.whatsapp)document.getElementById('waBtn').href='https://wa.me/'+hall.whatsapp.replace(/\D/g,'')+'?text='+encodeURIComponent('Hi, I am interested in '+hall.name);
+  if(hall.phone)document.getElementById('callBtn').href='tel:'+hall.phone;
+
+  renderReviews();
+  renderCalendar();
+}
+
+// Tabs
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
+  t.classList.add('active');
+  document.getElementById('p-'+t.dataset.t).classList.add('active');
+});
+
+/* ===== LIVE REVIEWS (localStorage) ===== */
+function reviewKey(){return 'reviews_'+hallId}
+function getReviews(){
+  const seed=hall.reviews||[];
+  const stored=JSON.parse(localStorage.getItem(reviewKey())||'[]');
+  return [...stored,...seed];
+}
+function renderReviews(){
+  const all=getReviews();
+  const avg=all.length?(all.reduce((s,r)=>s+r.rating,0)/all.length).toFixed(1):'-';
+  document.getElementById('avgRate').textContent=avg;
+  document.getElementById('revCount').textContent=all.length;
+  document.getElementById('avgStars').innerHTML='★'.repeat(Math.round(avg))+'<span style="color:#444">'+'★'.repeat(5-Math.round(avg))+'</span>';
+  document.getElementById('revList').innerHTML=all.map(r=>`
+    <div class="review-item">
+      <div class="top"><span class="name">${r.name}</span><span class="stars">${'★'.repeat(r.rating)}${'<span style=\"color:#444\">'+'★'.repeat(5-r.rating)+'</span>'}</span></div>
+      <div class="cmt">${r.comment}</div>
+      ${r.when?`<div class="when">${new Date(r.when).toLocaleDateString()}</div>`:''}
+    </div>`).join('');
+}
+document.querySelectorAll('.star-btn').forEach(b=>{
+  b.onclick=()=>{selStars=+b.dataset.v;document.querySelectorAll('.star-btn').forEach((s,i)=>s.classList.toggle('on',i<selStars))};
+});
+document.getElementById('submitRev').onclick=()=>{
+  const name=document.getElementById('revName').value.trim();
+  const text=document.getElementById('revText').value.trim();
+  if(!selStars||!name||!text){toast('Please fill name, rating & comment','error');return}
+  const stored=JSON.parse(localStorage.getItem(reviewKey())||'[]');
+  stored.unshift({name,rating:selStars,comment:text,when:Date.now()});
+  localStorage.setItem(reviewKey(),JSON.stringify(stored));
+  document.getElementById('revName').value='';document.getElementById('revText').value='';
+  selStars=0;document.querySelectorAll('.star-btn').forEach(s=>s.classList.remove('on'));
+  renderReviews();toast('Thanks! Your review is live.','success');
+};
+
+/* ===== CALENDAR + BOOKINGS ===== */
+function bookingsKey(){return 'bookings_'+hallId}
+function getBookings(){return JSON.parse(localStorage.getItem(bookingsKey())||'[]')}
+function addBooking(dateStr,email){
+  const b=getBookings();b.push({date:dateStr,email,when:Date.now()});
+  localStorage.setItem(bookingsKey(),JSON.stringify(b));
+}
+function renderCalendar(){
+  const y=calMonth.getFullYear(),m=calMonth.getMonth();
+  const monthNames=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('calTitle').textContent=monthNames[m]+' '+y;
+  const first=new Date(y,m,1).getDay();
+  const days=new Date(y,m+1,0).getDate();
+  const today=new Date();today.setHours(0,0,0,0);
+  const booked=new Set(getBookings().map(b=>b.date));
+  let html=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d=>`<div class="dow">${d}</div>`).join('');
+  for(let i=0;i<first;i++)html+='<div class="day empty"></div>';
+  for(let d=1;d<=days;d++){
+    const dt=new Date(y,m,d);
+    const ds=dt.toISOString().slice(0,10);
+    const cls=['day'];
+    if(dt<today)cls.push('past');
+    if(dt.getTime()===today.getTime())cls.push('today');
+    if(booked.has(ds))cls.push('booked');
+    if(selectedDate===ds)cls.push('selected');
+    html+=`<div class="${cls.join(' ')}" data-d="${ds}">${d}</div>`;
+  }
+  document.getElementById('calGrid').innerHTML=html;
+  document.querySelectorAll('.cal-grid .day:not(.empty):not(.past)').forEach(el=>{
+    el.onclick=()=>{
+      const ds=el.dataset.d;
+      const msg=document.getElementById('bookedMsg');
+      if(booked.has(ds)){msg.textContent='⚠ This date is already booked. Please pick another.';msg.classList.add('show');return}
+      msg.classList.remove('show');
+      selectedDate=ds;
+      const dt=new Date(ds);
+      document.getElementById('selDate').textContent=dt.toLocaleDateString('en-US',{day:'numeric',month:'long',year:'numeric'});
+      document.getElementById('selDay').textContent=dt.toLocaleDateString('en-US',{weekday:'long'});
+      renderCalendar();
+    };
+  });
+}
+document.getElementById('prevM').onclick=()=>{calMonth.setMonth(calMonth.getMonth()-1);renderCalendar()};
+document.getElementById('nextM').onclick=()=>{calMonth.setMonth(calMonth.getMonth()+1);renderCalendar()};
+
+/* ===== PAYMENT ===== */
+document.getElementById('bookNow').onclick=()=>{
+  if(!selectedDate){toast('Please select a date first','error');document.querySelector('[data-t="booking"]').click();return}
+  document.getElementById('payAmt').textContent='PKR '+hall.starting_price.toLocaleString();
+  document.getElementById('payDate').textContent='For '+new Date(selectedDate).toLocaleDateString('en-US',{day:'numeric',month:'short',year:'numeric'});
+  document.getElementById('payModal').classList.add('show');
+};
+document.getElementById('payClose').onclick=()=>document.getElementById('payModal').classList.remove('show');
+document.querySelectorAll('.pm').forEach(p=>p.onclick=()=>{
+  document.querySelectorAll('.pm').forEach(x=>x.classList.remove('selected'));p.classList.add('selected');
+});
+// card formatting
+document.getElementById('cardNum').addEventListener('input',e=>{e.target.value=e.target.value.replace(/\D/g,'').replace(/(.{4})/g,'$1 ').trim()});
+document.getElementById('cardExp').addEventListener('input',e=>{let v=e.target.value.replace(/\D/g,'');if(v.length>2)v=v.slice(0,2)+'/'+v.slice(2,4);e.target.value=v});
+
+document.getElementById('payConfirm').onclick=()=>{
+  const email=document.getElementById('payEmail').value.trim();
+  if(!email||!/.+@.+\..+/.test(email)){toast('Valid email required for reminder','error');return}
+  addBooking(selectedDate,email);
+  scheduleReminder(email,selectedDate);
+  document.getElementById('payModal').classList.remove('show');
+  toast('✓ Booking confirmed! Reminder scheduled for 1 day before.','success');
+  renderCalendar();
+};
+
+/* ===== EMAIL REMINDER (1 day before) ===== */
+function scheduleReminder(email,dateStr){
+  const reminders=JSON.parse(localStorage.getItem('reminders')||'[]');
+  const eventDate=new Date(dateStr);
+  const remindAt=new Date(eventDate);remindAt.setDate(remindAt.getDate()-1);remindAt.setHours(9,0,0,0);
+  reminders.push({email,hall:hall.name,date:dateStr,remindAt:remindAt.getTime(),sent:false});
+  localStorage.setItem('reminders',JSON.stringify(reminders));
+  checkReminders();
+}
+function checkReminders(){
+  const reminders=JSON.parse(localStorage.getItem('reminders')||'[]');
+  const now=Date.now();let changed=false;
+  reminders.forEach(r=>{
+    if(!r.sent&&r.remindAt<=now){
+      sendReminderEmail(r);r.sent=true;changed=true;
+    }
+  });
+  if(changed)localStorage.setItem('reminders',JSON.stringify(reminders));
+}
+function sendReminderEmail(r){
+  // EmailJS integration — replace SERVICE_ID, TEMPLATE_ID, PUBLIC_KEY
+  if(window.emailjs&&window.EMAILJS_READY){
+    emailjs.send('SERVICE_ID','TEMPLATE_ID',{
+      to_email:r.email,hall_name:r.hall,booking_date:r.date
+    }).then(()=>console.log('Reminder sent to',r.email))
+      .catch(e=>console.error('Reminder failed',e));
+  }else{
+    console.log('[Reminder Email]',r);
+  }
+}
+// On page load, check for any due reminders
+setTimeout(checkReminders,1000);
+setInterval(checkReminders,60000);
+</script>
+
+<footer class="main-footer">
+  <div class="footer-inner">
+    <div class="footer-brand"><i class="fa-solid fa-crown"></i> WeDream</div>
+    <div class="footer-links">
+      <a href="halls.html">Halls</a>
+      <a href="catering.html">Catering</a>
+      <a href="photographers.html">Photographers</a>
+      <a href="car-rentals.html">Car Rentals</a>
+      <a href="decorators.html">Decorators</a>
+    </div>
+    <div class="footer-social">
+      <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+      <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+      <a href="#" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+    </div>
+  </div>
+  <div class="footer-copy">© 2025 WeDream. All rights reserved.</div>
+</footer>
+
+</body>
+</html>

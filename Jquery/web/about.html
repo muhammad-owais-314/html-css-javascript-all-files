@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="mdbootstrap/css/mdb.min.css">
+</head>
+<body>
+     <div id="nav-container"></div>
+    <h1>About Page</h1>
+    <div id="footer-container"></div>
+    <script src="mdbootstrap/js/mdb.umd.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+    <script>
+
+        $(document).ready(()=>{
+            
+        $.get('navbar.html',(data)=>{
+            console.log(data)
+            $('#nav-container').html(data)
+        })
+        
+        
+        $.get('footer.html',(data)=>{
+            console.log(data)
+            $('#footer-container').html(data)
+        })
+        
+    })
+
+    </script>
+</body>
+</html>

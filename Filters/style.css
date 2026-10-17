@@ -1,0 +1,22 @@
+.container{
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px
+}
+
+.filterImage{
+    width: 400px;
+    /* filter: blur(35px); */
+    /* filter: brightness(200%); */
+    /* filter: contrast(200%); */
+    /* filter: drop-shadow(8px 8px 10px red); */
+    /* filter: grayscale(50%); */
+    /* filter: hue-rotate(180deg); */
+    /* filter: invert(100%); */
+    /* filter: saturate(400%); */
+    /* filter: sepia(100%); */
+    /* filter: opacity(50%); */
+
+}

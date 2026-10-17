@@ -1,0 +1,21 @@
+:root{
+    --text-color : gray;
+}
+
+
+
+.firstPara{
+    color: var(--text-color);
+}
+.firstBold{
+    color: var(--text-color);
+}
+.firstItalic{
+    color: var(--text-color);
+}
+.firstUnderline{
+    color: var(--text-color);
+}
+.firstEm{
+    color: var(--text-color);
+}

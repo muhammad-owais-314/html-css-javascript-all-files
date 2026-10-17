@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+        .box {
+            background-color: tomato;
+            width: 100px;
+            height: 100px;
+        }
+
+        .passwordInput {
+            position: relative;
+
+        }
+
+        .eyeOpenIcon {
+            position: absolute;
+            right: 20px;
+            bottom: 10px;
+
+            cursor: pointer;
+        }
+    </style>
+
+</head>
+
+<body>
+
+
+
+
+    <div id="box" class="box"></div>
+
+    <button id="btn" class="btn btn-outline-primary">Hide Me</button>
+    <button id="btn1" class="btn btn-outline-primary">Show Me</button>
+    <button id="btn2" class="btn btn-outline-primary">Toggle Me</button>
+    <button id="btn3" class="btn btn-outline-primary">Slide Up</button>
+    <button id="btn4" class="btn btn-outline-primary">Slide Down</button>
+    <button id="btn5" class="btn btn-outline-primary">Fade Up</button>
+    <button id="btn6" class="btn btn-outline-primary">Fade Down</button>
+
+
+
+    <div class="container">
+        <div class="passwordInput">
+            <br>
+        <input class="form-control " type="password" id="inp">
+        <span id="eyeIcon" class="eyeOpenIcon"><i class="fa-solid fa-eye-slash"></i></span>
+    </div>
+    <br>
+    
+    <button id="inpBtn" class="btn btn-primary" disabled>Submit</button>
+    </div>
+
+
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/js/all.min.js"
+        integrity="sha512-6BTOlkauINO65nLhXhthZMtepgJSghyimIalb+crKRPhvhmsCdnIuGcVbR5/aQY2A+260iC1OPy1oCdB6pSSwQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script>
+
+
+        $(document).ready(() => {
+
+            // console.log($('#box'))
+            // console.log($('#btn'))
+
+
+            $('#btn').click(() => {
+                $('#box').hide(4000);
+            })
+
+            $('#btn1').click(() => {
+                $('#box').show(2000);
+            })
+
+
+            $('#btn2').click(() => {
+                $('#box').toggle(2000);
+            })
+
+
+            $('#btn3').click(() => {
+                $('#box').slideUp(2000);
+            })
+
+            $('#btn4').click(() => {
+                $('#box').slideDown(2000);
+            })
+
+            $('#btn5').click(() => {
+                $('#box').fadeIn(2000);
+            })
+
+            $('#btn6').click(() => {
+                $('#box').fadeOut(2000);
+            })
+            
+            // $('#btn6').click(() => {
+            //     $('#box').fadeToggle(2000);
+            // })
+
+
+            $('#eyeIcon').click(() => {
+
+
+                if ($('#inp').attr('type') == 'password') {
+                    $('#inp').attr('type', "text")
+                    $("#eyeIcon").html(`<i class="fa-solid fa-eye"></i>`)
+                }
+                else if ($('#inp').attr('type') == 'text') {
+                    $("#eyeIcon").html(`<i class="fa-solid fa-eye-slash"></i>`)
+                    $('#inp').attr('type', "password")
+                }
+
+                console.log($('#inp').attr('type'))
+
+
+
+
+
+
+            })
+
+
+
+            $('#inp').on('keyup',()=>{
+
+                console.log($('#inp').val())
+                if($('#inp').val() != ''){
+                    $("#inpBtn").removeAttr("disabled")
+                    
+                }
+                else if($('#inp').val() == ''){
+                    
+                    $("#inpBtn").attr("disabled","disabled")
+                }
+            })
+
+
+
+
+
+
+
+
+        })
+
+
+
+    </script>
+
+
+
+
+
+</body>
+
+</html>

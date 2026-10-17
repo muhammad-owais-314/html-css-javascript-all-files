@@ -1,0 +1,15 @@
+[
+    {
+        "prodName": "Headphone",
+        "prodPrice": 2000
+    },
+    {
+        "prodName": "Mouse",
+        "prodPrice": 200
+    },
+    {
+        "prodName": "Keyboard",
+        "prodPrice": 6.70,
+        "isAlive": true
+    }
+]
